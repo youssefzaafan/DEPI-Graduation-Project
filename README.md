@@ -3,7 +3,7 @@ Web Test Automation framework project 
 ---
 # Team Members:
 - Ahmed Sayed
-- Mariana Shawki
+- Mariana Shawky
 - Salma Mamdouh
 - Youssef Yasser
 - Youssef Zaafan
