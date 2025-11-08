@@ -34,8 +34,8 @@ public class Main {
 
             System.out.println("✅ Login successful! User reached dashboard.");
 
-                            //Admin
-                            // Search for Exist User
+            //Admin
+            // Search for Exist User
             System.out.println("***********************************************************");
             System.out.println("********Search for current Epmloyee From Admin Page********");
             System.out.println("***********************************************************");
@@ -46,14 +46,14 @@ public class Main {
 
             wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".oxd-input.oxd-input--active")));
 
-           //Admin Username
+            //Admin Username
             List<WebElement> adminUsername = driver.findElements(By.cssSelector(".oxd-input.oxd-input--active"));
             adminUsername.get(1).click();
             adminUsername.get(1).sendKeys("Admin");
 
 
             List<WebElement> dropDownlists = driver.findElements(By.cssSelector(".oxd-icon.bi-caret-down-fill.oxd-select-text--arrow"));
-                                         // System.out.println(dropDownlists.size());
+            // System.out.println(dropDownlists.size());
             //User Role DropDown list
             WebElement userRole = dropDownlists.getFirst();
             userRole.click();
@@ -77,7 +77,7 @@ public class Main {
             WebElement displayedName = driver.findElement(By.cssSelector(".oxd-userdropdown-name"));
             //Get the current user nae of the current user
             String usernameText = displayedName.getText();
-                        //System.out.println(usernameText);
+            //System.out.println(usernameText);
             WebElement employeeName = driver.findElement(By.xpath("//input[@placeholder=\"Type for hints...\"]"));
             employeeName.click();
             employeeName.sendKeys(usernameText);
@@ -85,7 +85,7 @@ public class Main {
             employeeName.sendKeys(Keys.ARROW_DOWN);
             employeeName.sendKeys(Keys.ENTER);
 
-                //Search Button
+            //Search Button
             WebElement searchButton = driver.findElement(By.xpath("//button[@type=\"submit\"]"));
             searchButton.click();
             System.out.println("✅ SearchFunctionality successful! Admin Page");
@@ -169,8 +169,8 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-finally {
-          driver.quit();
+        finally {
+            driver.quit();
         }
 
     }
