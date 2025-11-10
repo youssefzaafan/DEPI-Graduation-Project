@@ -1,5 +1,6 @@
 package org.orangehrm.pages;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.orangehrm.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,8 +18,7 @@ public class EmployeeListPage {
     private final By EMPLOYMENT_STATUS_DROPDOWN = By.xpath("(//div[@class='oxd-select-text-input'])[1]");
     private final By INCLUDE_DROPDOWN = By.xpath("(//div[@class='oxd-select-text-input'])[2]");
     private final By SEARCH_BUTTON = By.xpath("//button[@type='submit' and normalize-space()='Search']");
-    private final By RESET_BUTTON = By.xpath("//button[@type='button' and normalize-space()='Reset']");
-    private final By ADD_BUTTON = By.xpath("//button[normalize-space()='Add']");
+    private final By RESET_BUTTON = By.xpath("//button[@type='button' and normalize-space()='Reset']");    private final By ADD_BUTTON = By.xpath("//button[normalize-space()='Add']");
     private final By RECORD_COUNT_TEXT = By.xpath("//div[@class='orangehrm-horizontal-padding orangehrm-vertical-padding']//span");
 
     // ===== Constructor =====
@@ -62,5 +62,19 @@ public class EmployeeListPage {
     public AddEmployeePage clickAddButton() {
         waitHelper.waitForElementToBeClickable(ADD_BUTTON).click();
         return new AddEmployeePage(driver, waitHelper);
+    }
+    // Inside EmployeeListPage.java
+
+
+
+// ...
+
+    // New method to check if the specific page header is displayed
+    public boolean isEmployeeListPageHeaderDisplayed() {
+        try {
+            return waitHelper.waitForElementToBeVisible(PAGE_HEADER).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

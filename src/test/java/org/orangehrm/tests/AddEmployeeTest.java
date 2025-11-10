@@ -90,8 +90,8 @@ public class AddEmployeeTest extends Base {
 
         // FIX: DO NOT navigate again. Use the existing 'addEmployeePage' instance.
 
-        String firstName = "TestFN_" + System.currentTimeMillis();
-        String lastName = "TestLN";
+        String firstName = "Ahmed" + System.currentTimeMillis();
+        String lastName = "Sayed";
 
         addEmployeePage.fillRequiredFields(firstName, lastName);
         addEmployeePage.submitEmployee();

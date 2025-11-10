@@ -5,6 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.WebElement;
 
 
 import java.time.Duration;
@@ -55,8 +56,8 @@ public class Main {
             List<WebElement> dropDownlists = driver.findElements(By.cssSelector(".oxd-icon.bi-caret-down-fill.oxd-select-text--arrow"));
             // System.out.println(dropDownlists.size());
             //User Role DropDown list
-            WebElement userRole = dropDownlists.getFirst();
-            userRole.click();
+//            WebElement userRole = dropDownlists.getFirst();
+//            userRole.click();
 
             // Waiting until options to load
             wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@role='listbox']//span[text()='Admin']")));
