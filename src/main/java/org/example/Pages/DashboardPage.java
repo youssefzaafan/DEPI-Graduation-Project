@@ -14,7 +14,11 @@ public class DashboardPage {
 
     private By profileMenu = By.cssSelector("p.oxd-userdropdown-name");
     private By logoutBtn = By.xpath("//a[text()='Logout']");
+    private By adminPageLocator = By.xpath("//a[contains(@href,'/web/index.php/admin/viewAdminModule')]");
 
+    public void naviagteToAdminPage() {
+        wait.until(ExpectedConditions.elementToBeClickable(adminPageLocator)).click();
+    }
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
