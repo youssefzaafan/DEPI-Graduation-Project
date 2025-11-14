@@ -30,9 +30,15 @@ public class DashboardPage {
 
     public void logout() {
         wait.until(ExpectedConditions.elementToBeClickable(profileMenu)).click();
+
+      wait.until(ExpectedConditions.visibilityOfElementLocated(logoutBtn));
+
         wait.until(ExpectedConditions.elementToBeClickable(logoutBtn)).click();
+
+
         wait.until(ExpectedConditions.urlContains("auth/login"));
     }
+
 
     public boolean isAtDashboard() {
         try {

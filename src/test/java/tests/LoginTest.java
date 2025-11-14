@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 
 public class LoginTest extends BaseTest {
 
+
+
     @Test(description = "TC-001: Verify Login Page UI elements")
     public void verifyLoginPageUIElements() {
         LoginPage loginPage = new LoginPage(driver);
@@ -28,14 +30,14 @@ public class LoginTest extends BaseTest {
     public void loginWithInvalidUsername() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAs("Admin1", "admin123");
-        Assert.assertEquals(loginPage.getErrorMessage(), "Invalid credentials");
+        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
     }
 
     @Test(description = "TC-004: Login with invalid password")
     public void loginWithInvalidPassword() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAs("Admin", "12345");
-        Assert.assertEquals(loginPage.getErrorMessage(), "Invalid credentials");
+        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
     }
 
     @Test(description = "TC-005: Attempt login with empty fields")
@@ -68,7 +70,7 @@ public class LoginTest extends BaseTest {
     public void caseSensitivityAdmin() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAs("admin", "admin123");
-        Assert.assertEquals(loginPage.getErrorMessage(), "Invalid credentials");
+        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
     }
 
     @Test(description = "TC-009: Verify session persistence after login")
@@ -86,7 +88,7 @@ public class LoginTest extends BaseTest {
     public void caseSensitivityEmployee() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAs("mariana", "m123");
-        Assert.assertEquals(loginPage.getErrorMessage(), "Invalid credentials");
+        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
     }
 
     @Test(description = "TC-11: Verify logout functionality")

@@ -1,4 +1,4 @@
-package Pages;
+package org.example.Pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -17,6 +17,7 @@ public class LoginPage {
     private By passwordField = By.name("password");
     private By loginButton = By.cssSelector("button[type='submit']");
     private By errorMessage = By.cssSelector(".oxd-text.oxd-text--span.oxd-input-field-error-message.oxd-input-group__message");
+    private By errorMessage2 = By.cssSelector(".oxd-text.oxd-text--p.oxd-alert-content-text");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -24,16 +25,19 @@ public class LoginPage {
     }
 
     public void enterUsername(String username) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
         driver.findElement(usernameField).clear();
         driver.findElement(usernameField).sendKeys(username);
     }
 
     public void enterPassword(String password) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
         driver.findElement(passwordField).clear();
         driver.findElement(passwordField).sendKeys(password);
     }
 
     public void clickLogin() {
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
         driver.findElement(loginButton).click();
     }
 
@@ -41,10 +45,11 @@ public class LoginPage {
         enterUsername(username);
         enterPassword(password);
         clickLogin();
+
+        // optional wait for dashboard URL
         try {
             wait.until(ExpectedConditions.urlContains("dashboard"));
-        } catch (Exception e) {
-            // Ignore if login fails
+        } catch (Exception ignored) {
         }
     }
 
@@ -52,33 +57,33 @@ public class LoginPage {
         enterUsername(username);
         enterPassword(password);
         driver.findElement(passwordField).sendKeys(Keys.ENTER);
+
         try {
             wait.until(ExpectedConditions.urlContains("dashboard"));
-        } catch (Exception e) {
-            // Ignore if login fails
+        } catch (Exception ignored) {
         }
     }
-
-
 
     public String getErrorMessage() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
     }
 
-
+    public String getErrorMessage2() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage2)).getText();
+    }
     public boolean isPasswordMasked() {
         return driver.findElement(passwordField).getAttribute("type").equals("password");
     }
 
     public boolean isUsernameFieldDisplayed() {
-        return driver.findElement(usernameField).isDisplayed();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
     }
 
     public boolean isPasswordFieldDisplayed() {
-        return driver.findElement(passwordField).isDisplayed();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).isDisplayed();
     }
 
     public boolean isLoginButtonDisplayed() {
-        return driver.findElement(loginButton).isDisplayed();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton)).isDisplayed();
     }
 }
