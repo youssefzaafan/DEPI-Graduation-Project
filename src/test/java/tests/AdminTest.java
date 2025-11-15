@@ -2,7 +2,6 @@ package tests;
 
 import Pages.AdminPage;
 import Pages.DashboardPage;
-import org.example.utils.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -70,17 +69,6 @@ public class AdminTest extends BaseTest {
     }
 
 }
-
-//       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(155));
-//       wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oxd-toast-content-text")));
-//        boolean isUserAdded = adminPage.isUserPresentInTable("Zzzzxzyzx");
-//        Assert.assertTrue(isUserAdded, "User Zzzzxzyzx should be present in the user table after saving.");
-
-//       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(155));
-//       wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oxd-toast-content-text")));
-//        boolean isUserAdded = adminPage.isUserPresentInTable("Zzzzxzyzx");
-//        Assert.assertTrue(isUserAdded, "User Zzzzxzyzx should be present in the user table after saving.");
-//  }
 
 
 

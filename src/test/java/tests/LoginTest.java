@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import Pages.DashboardPage;
 import Pages.LoginPage;
-import org.example.utils.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
