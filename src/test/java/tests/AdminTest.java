@@ -18,7 +18,7 @@ public class AdminTest extends BaseTest {
        Assert.assertTrue(adminPage.isAtAdminPage(), "Not Admin Page");
     }
 
-    @Test(description = "TC-001: Search with valid data" /*, dependsOnMethods = "addUser"*/)
+    @Test(description = "TC-001: Search with valid data", priority = 1)
     public void searchForUnExistsUser() {
 
         adminPage.enterUsername("Zzzzxzyzx");
@@ -29,7 +29,7 @@ public class AdminTest extends BaseTest {
         Assert.assertFalse(adminPage.isSearchResultDisplayed());
     }
 
-    @Test(description = "TC-002: add new user with valid data")
+    @Test(description = "TC-002: add new user with valid data", priority = 5)
     public void addUser(){
         adminPage.clickAddButton();
         adminPage.addEmployeename(adminPage.getCurrentUsername());
@@ -42,7 +42,7 @@ public class AdminTest extends BaseTest {
 
         Assert.assertTrue(adminPage.verifyUserAdded("Zzzzxzyzx"));
     }
-    @Test(description = "TC-003: Search with valid data" , dependsOnMethods = "addUser")
+    @Test(description = "TC-003: Search with valid data" , dependsOnMethods = "addUser", priority = 3)
     public void searchForExistsUser() {
 
         adminPage.enterUsername("Zzzzxzyzx");
@@ -52,14 +52,14 @@ public class AdminTest extends BaseTest {
         adminPage.clickSearchButton();
         Assert.assertTrue(adminPage.isSearchResultDisplayed());
     }
-    @Test(description = "TC-004: Delete All Exsit Users" )
+    @Test(description = "TC-004: Delete All Exsit Users", priority = 2)
     public void deleteAllUsers() {
         adminPage.checkAllUsers();
         adminPage.clickDeleteSelectedButton();
         Assert.assertTrue(adminPage.isAdminUserOnlyDisplayed());
     }
 
-    @Test(description = "TC-005: Delete An Exsit Users", dependsOnMethods = "addUser")
+    @Test(description = "TC-005: Delete An Exsit Users", dependsOnMethods = "addUser" , priority = 4)
     public void deleteExistUser() {
         adminPage.enterUsername("Zzzzxzyzx");
         adminPage.clickSearchButton();
