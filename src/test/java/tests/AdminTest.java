@@ -1,19 +1,13 @@
-package org.example.tests;
+package tests;
 
-import org.example.Pages.AdminPage;
-import org.example.Pages.DashboardPage;
-import org.example.Pages.LoginPage;
+import Pages.AdminPage;
+import Pages.DashboardPage;
 import org.example.utils.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
 
-import static org.testng.TestRunner.PriorityWeight.dependsOnMethods;
 public class AdminTest extends BaseTest {
     private AdminPage adminPage;
 
@@ -22,22 +16,22 @@ public class AdminTest extends BaseTest {
         adminPage = new AdminPage(driver);
         DashboardPage dashboard = new DashboardPage(driver);
         dashboard.naviagteToAdminPage();
-        adminPage.isAtAdminPage();
+       Assert.assertTrue(adminPage.isAtAdminPage(), "Not Admin Page");
     }
 
-    @Test(description = "TC-001: Search with valid data")
-    public void searchUser() {
+    @Test(description = "TC-001: Search with valid data" /*, dependsOnMethods = "addUser"*/)
+    public void searchForUnExistsUser() {
+
         adminPage.enterUsername("Zzzzxzyzx");
         adminPage.enterEmployeename(adminPage.getCurrentUsername());
         adminPage.selectOption(adminPage.getUserRoleDropdown(), "Admin");
         adminPage.selectOption(adminPage.getStatusDropdown(), "Enabled");
         adminPage.clickSearchButton();
-        Assert.assertTrue(adminPage.isSearchResultDisplayed(), "Search result not displayed");
+        Assert.assertFalse(adminPage.isSearchResultDisplayed());
     }
 
     @Test(description = "TC-002: add new user with valid data")
     public void addUser(){
-
         adminPage.clickAddButton();
         adminPage.addEmployeename(adminPage.getCurrentUsername());
         adminPage.selectOption(adminPage.getUserRoleDropdown(), "Admin");
@@ -47,19 +41,40 @@ public class AdminTest extends BaseTest {
         adminPage.confirmPassword("Z1234z1234");
         adminPage.clickSaveButton();
 
+        Assert.assertTrue(adminPage.verifyUserAdded("Zzzzxzyzx"));
+    }
+    @Test(description = "TC-003: Search with valid data" , dependsOnMethods = "addUser")
+    public void searchForExistsUser() {
+
+        adminPage.enterUsername("Zzzzxzyzx");
+        adminPage.enterEmployeename(adminPage.getCurrentUsername());
+        adminPage.selectOption(adminPage.getUserRoleDropdown(), "Admin");
+        adminPage.selectOption(adminPage.getStatusDropdown(), "Enabled");
+        adminPage.clickSearchButton();
+        Assert.assertTrue(adminPage.isSearchResultDisplayed());
+    }
+    @Test(description = "TC-004: Delete All Exsit Users" )
+    public void deleteAllUsers() {
+        adminPage.checkAllUsers();
+        adminPage.clickDeleteSelectedButton();
+        Assert.assertTrue(adminPage.isAdminUserOnlyDisplayed());
+    }
+
+    @Test(description = "TC-005: Delete An Exsit Users", dependsOnMethods = "addUser")
+    public void deleteExistUser() {
+        adminPage.enterUsername("Zzzzxzyzx");
+        adminPage.clickSearchButton();
+        adminPage.checkAllUsers();
+        adminPage.clickDeleteSelectedButton();
+        Assert.assertTrue(adminPage.verifyUserDeleted("Zzzzxzyzx"));
+    }
+
+}
+
 //       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(155));
 //       wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oxd-toast-content-text")));
 //        boolean isUserAdded = adminPage.isUserPresentInTable("Zzzzxzyzx");
 //        Assert.assertTrue(isUserAdded, "User Zzzzxzyzx should be present in the user table after saving.");
-    }
-
-    @Test(description = "TC-003: delete exsit user" )
-    public void deleteAllUsers() {
-      //  driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        adminPage.getRecordsFound();
-        adminPage.clickDeleteButton();
-
-    }
 
 //       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(155));
 //       wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oxd-toast-content-text")));
@@ -68,5 +83,5 @@ public class AdminTest extends BaseTest {
 //  }
 
 
-}
+
 

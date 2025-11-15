@@ -2,8 +2,8 @@ package tests;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import org.example.Pages.DashboardPage;
-import org.example.Pages.LoginPage;
+import Pages.DashboardPage;
+import Pages.LoginPage;
 import org.example.utils.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

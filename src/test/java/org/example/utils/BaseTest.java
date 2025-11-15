@@ -1,8 +1,8 @@
 package org.example.utils;
 
+import Pages.LoginPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
@@ -15,15 +15,17 @@ public class BaseTest {
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(25));
-
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get(BASE_URL);
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.loginAs("Admin", "admin123");
     }
 
-    @AfterMethod
+   /* @AfterMethod
     public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
-    }
+    }*/
 }
