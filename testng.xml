@@ -10,3 +10,17 @@
         </classes>
     </test>
 </suite>
+
+
+
+<suite name="AdminSuit">
+<listeners>
+    <listener class-name="utils.AllureTestListener"/>
+</listeners>
+
+<test name="AdminTests">
+    <classes>
+        <class name="tests.AdminTest"/>
+    </classes>
+</test>
+</suite>
