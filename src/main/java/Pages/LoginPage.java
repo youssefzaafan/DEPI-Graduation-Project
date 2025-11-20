@@ -3,6 +3,7 @@ package Pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,79 +13,110 @@ public class LoginPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private DashboardPage dashboardPage;
 
-    private By usernameField = By.name("username");
-    private By passwordField = By.name("password");
+    private By profileMenu = By.cssSelector("p.oxd-userdropdown-name");
+    private By usernameField = By.cssSelector("input[placeholder='Username']");
+    private By passwordField = By.cssSelector("input[placeholder='Password']");
     private By loginButton = By.cssSelector("button[type='submit']");
     private By errorMessage = By.cssSelector(".oxd-text.oxd-text--span.oxd-input-field-error-message.oxd-input-group__message");
     private By errorMessage2 = By.cssSelector(".oxd-text.oxd-text--p.oxd-alert-content-text");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        this.dashboardPage = new DashboardPage(driver);
     }
+
+    private void ensureLoginPage() {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
+        } catch (Exception e) {
+            if (dashboardPage.isAtDashboard()) {
+                dashboardPage.logout();
+                wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
+            }
+        }
+    }
+
 
     public void enterUsername(String username) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
-        driver.findElement(usernameField).clear();
-        driver.findElement(usernameField).sendKeys(username);
+        ensureLoginPage();
+        WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
+        wait.until(ExpectedConditions.elementToBeClickable(usernameField));
+        usernameInput.clear();
+        usernameInput.sendKeys(username);
     }
-
     public void enterPassword(String password) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
-        driver.findElement(passwordField).clear();
-        driver.findElement(passwordField).sendKeys(password);
+        WebElement passwordInput = wait.until(ExpectedConditions.elementToBeClickable(passwordField));
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
     }
 
     public void clickLogin() {
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-        driver.findElement(loginButton).click();
+        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+        btn.click();
     }
 
     public void loginAs(String username, String password) {
         enterUsername(username);
         enterPassword(password);
         clickLogin();
-        wait.until(ExpectedConditions.urlContains("dashboard"));
 
-        // optional wait for dashboard URL
         try {
-            wait.until(ExpectedConditions.urlContains("dashboard"));
-        } catch (Exception ignored) {
-        }
+            wait.until(ExpectedConditions.or(
+                    ExpectedConditions.urlContains("dashboard"),
+                    ExpectedConditions.visibilityOfElementLocated(errorMessage)
+            ));
+        } catch (Exception ignored) {}
     }
+
 
     public void loginWithEnter(String username, String password) {
         enterUsername(username);
         enterPassword(password);
         driver.findElement(passwordField).sendKeys(Keys.ENTER);
 
-        try {
-            wait.until(ExpectedConditions.urlContains("dashboard"));
-        } catch (Exception ignored) {
+        if (!username.isEmpty() && !password.isEmpty()) {
+            try {
+                wait.until(ExpectedConditions.urlContains("dashboard"));
+            } catch (Exception ignored) {}
         }
     }
 
     public String getErrorMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+        } catch (Exception e) { return ""; }
     }
 
     public String getErrorMessage2() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage2)).getText();
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage2)).getText();
+        } catch (Exception e) { return ""; }
     }
+
     public boolean isPasswordMasked() {
-        return driver.findElement(passwordField).getAttribute("type").equals("password");
+        try {
+            return driver.findElement(passwordField).getAttribute("type").equals("password");
+        } catch (Exception e) { return false; }
     }
 
     public boolean isUsernameFieldDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
+        } catch (Exception e) { return false; }
     }
 
     public boolean isPasswordFieldDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).isDisplayed();
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).isDisplayed();
+        } catch (Exception e) { return false; }
     }
 
     public boolean isLoginButtonDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton)).isDisplayed();
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton)).isDisplayed();
+        } catch (Exception e) { return false; }
     }
 }

@@ -55,7 +55,7 @@ public class Main {
             List<WebElement> dropDownlists = driver.findElements(By.cssSelector(".oxd-icon.bi-caret-down-fill.oxd-select-text--arrow"));
             // System.out.println(dropDownlists.size());
             //User Role DropDown list
-            WebElement userRole = dropDownlists.getFirst();
+            WebElement userRole = dropDownlists.get(0);
             userRole.click();
 
             // Waiting until options to load
