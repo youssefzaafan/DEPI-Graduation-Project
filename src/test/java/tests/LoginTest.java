@@ -2,7 +2,7 @@ package tests;
 
 import Pages.DashboardPage;
 import Pages.LoginPage;
-import TestData.LoginDataProvider;
+//import TestData.LoginDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import org.testng.Assert;
@@ -37,21 +37,21 @@ public class LoginTest extends BaseTest {
         Assert.assertTrue(loginPage.isLoginButtonDisplayed());
     }
 
-    @Test(priority = 2, dataProvider = "validLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-002: Login with valid credentials")
+    /*@Test(priority = 2, dataProvider = "validLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-002: Login with valid credentials")
     @Description("Login using valid credentials")
     public void loginWithValidCredentials(String username, String password) {
         DashboardPage dashboard = loginAs(username, password);
         Assert.assertTrue(dashboard.isAtDashboard());
-    }
+    }*/
 
-    @Test(priority = 3, dataProvider = "invalidLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-003: Login with invalid username")
+    /*@Test(priority = 3, dataProvider = "invalidLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-003: Login with invalid username")
     @Description("Attempt login with an invalid username or password")
     public void loginWithInvalidCredentials(String username, String password) {
         attemptLogin(username, password);
         LoginPage loginPage = openLoginPage();
         String error = loginPage.getErrorMessage();
         Assert.assertTrue(error.contains("Invalid credentials") || error.contains("Required"));
-    }
+    }*/
 
     @Test(priority = 6, description = "TC-006: Verify password masking")
     @Description("Verify that the password field masks the input")

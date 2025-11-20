@@ -20,7 +20,7 @@ public class AdminTest extends BaseTest {
        Assert.assertTrue(adminPage.isAtAdminPage(), "Not Admin Page");
     }
 
-    @Test(description = "TC-001: Search with valid data", priority = 1 ,dataProvider = "adminData", dataProviderClass = TestData.AdminDataProvider.class)
+    @Test(description = "TC-001: Search with valid data", priority = 2 ,dataProvider = "adminData", dataProviderClass = TestData.AdminDataProvider.class)
     public void searchForUnExistsUser(String username, String roleType, String statusOtion) {
         Allure.step("Search for unexisting user");
         adminPage.enterUsername(username);
@@ -57,7 +57,7 @@ public class AdminTest extends BaseTest {
         adminPage.clickSearchButton();
         Assert.assertTrue(adminPage.isSearchResultDisplayed());
     }
-    @Test(description = "TC-004: Delete All Exsit Users", priority = 2)
+    @Test(description = "TC-004: Delete All Exsit Users", priority = 1)
     public void deleteAllUsers() {
         Allure.step("Delete All Users to prevent the conflict");
 
