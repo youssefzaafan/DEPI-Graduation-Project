@@ -1,27 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="LoginSuite">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+    </listeners>
 
-<suite name="OrangeHRM Automation Suite" verbose="1" parallel="false">
-
-    <!-- ========================================= -->
-    <!--        TEST SUITE CONFIGURATION           -->
-    <!-- ========================================= -->
-    <!--
-         parallel="false"  → Run tests sequentially
-         You can change to "classes" or "tests" for parallel execution later
-         thread-count="2"  → Enable only when parallel = true
-    -->
-
-    <test name="Login and Employee Management Tests">
+    <test name="LoginTests">
         <classes>
-            <!-- 1️⃣ Login Test -->
-            <class name="org.orangehrm.tests.AddEmployeeTest"/>
-            <!--
-                 You can add more test classes here later:
-                 <class name="org.orangehrm.tests.EmployeeListTest"/>
-                 <class name="org.orangehrm.tests.PIMSearchTest"/>
-            -->
+            <class name="tests.LoginTest"/>
         </classes>
     </test>
+</suite>
 
+
+
+<suite name="AdminSuit">
+<listeners>
+    <listener class-name="utils.AllureTestListener"/>
+</listeners>
+
+<test name="AdminTests">
+    <classes>
+        <class name="tests.AdminTest"/>
+    </classes>
+</test>
 </suite>
