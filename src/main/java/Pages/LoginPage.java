@@ -13,40 +13,32 @@ public class LoginPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private DashboardPage dashboardPage;
 
-    private By profileMenu = By.cssSelector("p.oxd-userdropdown-name");
+    //  Locators
     private By usernameField = By.cssSelector("input[placeholder='Username']");
     private By passwordField = By.cssSelector("input[placeholder='Password']");
     private By loginButton = By.cssSelector("button[type='submit']");
     private By errorMessage = By.cssSelector(".oxd-text.oxd-text--span.oxd-input-field-error-message.oxd-input-group__message");
     private By errorMessage2 = By.cssSelector(".oxd-text.oxd-text--p.oxd-alert-content-text");
 
+    // Constructor
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        this.dashboardPage = new DashboardPage(driver);
-    }
-
-    private void ensureLoginPage() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
-        } catch (Exception e) {
-            if (dashboardPage.isAtDashboard()) {
-                dashboardPage.logout();
-                wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
-            }
-        }
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
 
+
+
+    // Actions
     public void enterUsername(String username) {
-        ensureLoginPage();
-        WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
-        wait.until(ExpectedConditions.elementToBeClickable(usernameField));
+        WebElement usernameInput = wait.until(ExpectedConditions.elementToBeClickable(usernameField));
         usernameInput.clear();
         usernameInput.sendKeys(username);
     }
+
+
+
     public void enterPassword(String password) {
         WebElement passwordInput = wait.until(ExpectedConditions.elementToBeClickable(passwordField));
         passwordInput.clear();
@@ -63,27 +55,28 @@ public class LoginPage {
         enterPassword(password);
         clickLogin();
 
-        try {
-            wait.until(ExpectedConditions.or(
-                    ExpectedConditions.urlContains("dashboard"),
-                    ExpectedConditions.visibilityOfElementLocated(errorMessage)
-            ));
-        } catch (Exception ignored) {}
+        WebDriverWait flexibleWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        flexibleWait.pollingEvery(Duration.ofMillis(500));
+        flexibleWait.ignoring(org.openqa.selenium.NoSuchElementException.class);
+
+        flexibleWait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("dashboard"),
+                ExpectedConditions.presenceOfElementLocated(errorMessage),
+                ExpectedConditions.presenceOfElementLocated(errorMessage2)
+        ));
     }
-
-
     public void loginWithEnter(String username, String password) {
         enterUsername(username);
         enterPassword(password);
         driver.findElement(passwordField).sendKeys(Keys.ENTER);
 
-        if (!username.isEmpty() && !password.isEmpty()) {
-            try {
-                wait.until(ExpectedConditions.urlContains("dashboard"));
-            } catch (Exception ignored) {}
-        }
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("dashboard"),
+                ExpectedConditions.visibilityOfElementLocated(errorMessage)
+        ));
     }
 
+    //  Getters
     public String getErrorMessage() {
         try {
             return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
@@ -96,27 +89,20 @@ public class LoginPage {
         } catch (Exception e) { return ""; }
     }
 
+    // Checks
     public boolean isPasswordMasked() {
-        try {
-            return driver.findElement(passwordField).getAttribute("type").equals("password");
-        } catch (Exception e) { return false; }
+        return driver.findElement(passwordField).getAttribute("type").equals("password");
     }
 
     public boolean isUsernameFieldDisplayed() {
-        try {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
-        } catch (Exception e) { return false; }
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
     }
 
     public boolean isPasswordFieldDisplayed() {
-        try {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).isDisplayed();
-        } catch (Exception e) { return false; }
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).isDisplayed();
     }
 
     public boolean isLoginButtonDisplayed() {
-        try {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton)).isDisplayed();
-        } catch (Exception e) { return false; }
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(loginButton)).isDisplayed();
     }
 }

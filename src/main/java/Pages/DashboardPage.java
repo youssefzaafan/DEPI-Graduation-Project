@@ -32,17 +32,13 @@ public class DashboardPage {
     }
 
     public void logout() {
-        try {
-            WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(profileMenu));
-            profile.click();
-            WebElement logoutElement = wait.until(ExpectedConditions.visibilityOfElementLocated(logoutBtn));
-            wait.until(ExpectedConditions.elementToBeClickable(logoutElement));
-            logoutElement.click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[placeholder='Username']")));
-        } catch (Exception e) {
-            System.out.println("Logout failed: " + e.getMessage());
-        }
+        WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(profileMenu));
+        profile.click();
+        WebElement logoutElement = wait.until(ExpectedConditions.elementToBeClickable(logoutBtn));
+        logoutElement.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[placeholder='Username']")));
     }
+
 
     public boolean isAtDashboard() {
         try {

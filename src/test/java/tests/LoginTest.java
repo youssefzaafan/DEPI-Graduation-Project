@@ -2,112 +2,163 @@ package tests;
 
 import Pages.DashboardPage;
 import Pages.LoginPage;
-//import TestData.LoginDataProvider;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class LoginTest extends BaseTest {
 
-    @Step("Open Login Page")
-    public LoginPage openLoginPage() {
-        return new LoginPage(driver);
+    // ----------------- Setup & Teardown -----------------
+
+    @BeforeMethod
+    public void beforeEachTest() {
+        // Logout if already logged in (from BaseTest setup)
+        String currentUrl = driver.getCurrentUrl();
+        if (!currentUrl.contains("auth/login")) {
+            DashboardPage dashboard = new DashboardPage(driver);
+            dashboard.logout();
+        }
+
+        // Navigate to login page
+        driver.get(BASE_URL);
     }
 
-    @Step("Login with Username: {0}, Password: {1}")
-    public DashboardPage loginAs(String username, String password) {
-        LoginPage loginPage = openLoginPage();
-        loginPage.loginAs(username, password);
-        return new DashboardPage(driver);
+    @AfterMethod
+    public void afterEachTest() {
+        // Ensure we're logged out after each test
+        String currentUrl = driver.getCurrentUrl();
+        if (!currentUrl.contains("auth/login")) {
+            try {
+                DashboardPage dashboard = new DashboardPage(driver);
+                dashboard.logout();
+            } catch (Exception e) {
+                // If logout fails, navigate directly to login page
+                driver.get(BASE_URL);
+            }
+        }
     }
 
-    @Step("Attempt login with Username: {0}, Password: {1}")
-    public void attemptLogin(String username, String password) {
-        LoginPage loginPage = openLoginPage();
+    // ----------------- Utility Methods -----------------
+
+    @Step("Login as {0} / {1} then logout")
+    public void loginAndLogout(String username, String password) {
+        LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAs(username, password);
+
+        DashboardPage dashboard = new DashboardPage(driver);
+        Assert.assertTrue(dashboard.isAtDashboard(), "Login failed — cannot access dashboard");
+
+        dashboard.logout();
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("auth/login"),
+                "Logout failed — still not redirected to login page");
     }
+
+    @Step("Attempt login with username={0}, password={1}")
+    public LoginPage attemptLogin(String username, String password) {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.loginAs(username, password);
+        return loginPage;
+    }
+
+    // ----------------- Test Cases -----------------
 
     @Test(priority = 1, description = "TC-001: Verify Login Page UI elements")
-    @Description("Verify that all UI elements on the login page are displayed")
+    @Description("Validate that username, password and login button are displayed")
     public void verifyLoginPageUIElements() {
-        LoginPage loginPage = openLoginPage();
-        Assert.assertTrue(loginPage.isUsernameFieldDisplayed());
-        Assert.assertTrue(loginPage.isPasswordFieldDisplayed());
-        Assert.assertTrue(loginPage.isLoginButtonDisplayed());
+        LoginPage loginPage = new LoginPage(driver);
+
+        Assert.assertTrue(loginPage.isUsernameFieldDisplayed(), "Username field should be visible");
+        Assert.assertTrue(loginPage.isPasswordFieldDisplayed(), "Password field should be visible");
+        Assert.assertTrue(loginPage.isLoginButtonDisplayed(), "Login button should be visible");
     }
 
-    /*@Test(priority = 2, dataProvider = "validLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-002: Login with valid credentials")
-    @Description("Login using valid credentials")
-    public void loginWithValidCredentials(String username, String password) {
-        DashboardPage dashboard = loginAs(username, password);
-        Assert.assertTrue(dashboard.isAtDashboard());
-    }*/
+    @Test(priority = 2, description = "TC-002: Login with valid credentials")
+    public void loginWithValidCredentials() {
+        loginAndLogout("Admin", "admin123");
+    }
 
-    /*@Test(priority = 3, dataProvider = "invalidLoginData", dataProviderClass = LoginDataProvider.class, description = "TC-003: Login with invalid username")
-    @Description("Attempt login with an invalid username or password")
-    public void loginWithInvalidCredentials(String username, String password) {
-        attemptLogin(username, password);
-        LoginPage loginPage = openLoginPage();
+    @Test(priority = 3, description = "TC-003: Login with invalid credentials")
+    public void loginWithInvalidCredentials() {
+        LoginPage loginPage = attemptLogin("wrongUser", "wrongPass");
+
         String error = loginPage.getErrorMessage();
-        Assert.assertTrue(error.contains("Invalid credentials") || error.contains("Required"));
-    }*/
+        String secondError = loginPage.getErrorMessage2();
 
-    @Test(priority = 6, description = "TC-006: Verify password masking")
-    @Description("Verify that the password field masks the input")
-    public void verifyPasswordMasking() {
-        LoginPage loginPage = openLoginPage();
-        loginPage.enterPassword("mypassword");
-        Assert.assertTrue(loginPage.isPasswordMasked());
-    }
-
-    @Test(priority = 7, description = "TC-007: Press Enter key to login")
-    @Description("Login using the Enter key")
-    public void loginWithEnterKey() {
-        LoginPage loginPage = openLoginPage();
-        loginPage.loginWithEnter("Admin", "admin123");
-        DashboardPage dashboard = new DashboardPage(driver);
-        Assert.assertTrue(dashboard.isAtDashboard());
+        Assert.assertTrue(
+                !error.isEmpty() || !secondError.isEmpty(),
+                "Error message must appear for invalid credentials"
+        );
     }
 
     @Test(priority = 4, description = "TC-004: Attempt login with empty fields")
-    @Description("Attempt login without entering username and password")
     public void attemptLoginWithEmptyFields() {
-        attemptLogin("", "");
-        LoginPage loginPage = openLoginPage();
+        LoginPage loginPage = attemptLogin("", "");
+
         String error = loginPage.getErrorMessage();
-        Assert.assertTrue(error.contains("Required") || error.contains("Invalid credentials"));
+        Assert.assertFalse(error.isEmpty(), "Error must appear when fields are empty");
+        Assert.assertTrue(error.contains("Required"), "Error should contain 'Required'");
     }
 
-    @Test(priority = 5, description = "TC-005: Case sensitivity of username (Admin)")
-    @Description("Verify case sensitivity of the username 'admin'")
+    @Test(priority = 5, description = "TC-005: Case sensitivity username Admin")
     public void caseSensitivityAdmin() {
-        attemptLogin("admin", "admin123");
-        LoginPage loginPage = openLoginPage();
-        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
+        LoginPage loginPage = attemptLogin("admin", "admin123");
+
+        String error = loginPage.getErrorMessage2();
+        Assert.assertFalse(error.isEmpty(), "Error must appear");
+        Assert.assertEquals(error, "Invalid credentials", "Case sensitivity failed!");
     }
 
-    @Test(priority = 8, description = "TC-008: Case sensitivity of username (Employee)")
-    @Description("Verify case sensitivity of the username 'employee'")
+    @Test(priority = 6, description = "TC-006: Verify password masking")
+    public void verifyPasswordMasking() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.enterPassword("mypassword");
+
+        Assert.assertTrue(loginPage.isPasswordMasked(), "Password should be masked");
+    }
+
+    @Test(priority = 7, description = "TC-007: Login using Enter key")
+    public void loginWithEnterKey() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.loginWithEnter("Admin", "admin123");
+
+        DashboardPage dashboard = new DashboardPage(driver);
+        Assert.assertTrue(dashboard.isAtDashboard(), "Login with Enter key failed");
+
+        dashboard.logout();
+        Assert.assertTrue(driver.getCurrentUrl().contains("auth/login"),
+                "Logout failed after Enter-login");
+    }
+
+    @Test(priority = 8, description = "TC-008: Case sensitivity username Employee")
     public void caseSensitivityEmployee() {
-        attemptLogin("mariana", "m123");
-        LoginPage loginPage = openLoginPage();
-        Assert.assertEquals(loginPage.getErrorMessage2(), "Invalid credentials");
+        LoginPage loginPage = attemptLogin("mariana", "m123");
+
+        String error = loginPage.getErrorMessage2();
+        Assert.assertFalse(error.isEmpty(), "Error must appear");
+        Assert.assertEquals(error, "Invalid credentials");
     }
 
     @Test(priority = 9, description = "TC-009: Verify session persistence after login")
-    @Description("Verify that the session persists after logging in")
     public void sessionPersistenceAfterLogin() {
-        DashboardPage dashboard = loginAs("Admin", "admin123");
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.loginAs("Admin", "admin123");
+
+        DashboardPage dashboard = new DashboardPage(driver);
+
         driver.navigate().refresh();
-        Assert.assertTrue(dashboard.isAtDashboard());
+
+        Assert.assertTrue(dashboard.isAtDashboard(),
+                "Session should persist after refresh");
+
+        dashboard.logout();
     }
 
-    @Test(priority = 10, description = "TC-010: Verify logout functionality")
-    @Description("Verify that logout works correctly")
+    @Test(priority = 10, description = "TC-010: Verify logout functionality works")
     public void verifyLogoutFunctionality() {
-        DashboardPage dashboard = loginAs("Admin", "admin123");
-        dashboard.logout();
-        Assert.assertTrue(driver.getCurrentUrl().contains("auth/login"));
+        loginAndLogout("Admin", "admin123");
     }
 }
