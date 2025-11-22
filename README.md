@@ -1,6 +1,6 @@
 # OrangeHRM Website Automation & Manual Testing 
 
-Website URL: `https://opensource-demo.orangehrmlive.com/web/index.php/auth/login`
+Website URL: https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
 
 This repository contains manual and automation testing for the OrangeHRM website.  
 The work covers **Login/Logout**, **Admin**, **PIM**, **My Info**, and **Leave** modules based on detailed user stories.  
