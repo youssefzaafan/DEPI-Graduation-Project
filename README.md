@@ -54,6 +54,14 @@ DEPI-Graduation-Project  (Orange_Automation)
 ├── README.md
 └── pom.xml
 ```
+## 🛠️ Tools & Technologies Used
+
+- Project Management:	            Jira
+- IDE:	                           IntelliJ IDEA
+- Documentation & Manual Testing:	Excel
+- Automation Framework:         	Selenium WebDriver, TestNG, Maven
+- Reporting:                     	Allure Reports
+- Version Control:               	Git & GitHub
 
 ---
 
