@@ -65,6 +65,11 @@ public class LoginPage {
                 ExpectedConditions.presenceOfElementLocated(errorMessage2)
         ));
     }
+
+    public boolean isAtLoginPage() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField)).isDisplayed();
+    }
+
     public void loginWithEnter(String username, String password) {
         enterUsername(username);
         enterPassword(password);
