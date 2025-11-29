@@ -13,15 +13,18 @@ Future enhancements include completing automation for all remaining modules and 
 ## 📁 Project Structure
 
 ```
-DEPI-Graduation-Project  (Orange_Manual)
+DEPI-Graduation-Project/ Documentation  
 │
-├── docs
-│    ├── Bug Report
-│    ├── TestCase Report
-│    ├── Test Summary Report
+├──  ├── Test Summary Report
 │    ├── Team3-Testing-OrangeHRM
 
-DEPI-Graduation-Project  (Orange_Automation)
+DEPI-Graduation-Project/ Manual Testing
+│
+├──  ├── Bug Report
+│    ├── TestCase Report
+
+
+DEPI-Graduation-Project/ Automation Testing
 │
 ├── src
 │   ├── main
@@ -40,6 +43,7 @@ DEPI-Graduation-Project  (Orange_Automation)
 │       └── java
 │           ├── TestData
 │           │   └── AdminDataProvider.java
+|           |   └── LoginData.java
 │           │
 │           └── tests
 │               ├── AddEmployeeTest.java
